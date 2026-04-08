@@ -1,11 +1,7 @@
 import pygame
-import sys
-
-# Initialisation de Pygame
+import random
 
 pygame.init()
-
-# Taille de la fenêtre
 
 LARGEUR = 800
 HAUTEUR = 600
@@ -21,11 +17,35 @@ pygame.display.update()
 runnin = True
 fenetre.fill(VERT)
 
-# Curseur
-x_ferm = 40
-y_ferm = 30
+
+x_ferm = 375
+y_ferm = 300
 IMG_ferm = pygame.image.load("../pers/fermier.png")
 IMG_ferm = pygame.transform.scale(IMG_ferm,(60,60))
+
+
+img_vache = pygame.image.load("../pers/vache.png")
+img_vache= pygame.transform.scale(img_vache,(60,60))
+vaches =[]
+for i in range(5):
+    vache = {
+        "x":100,
+        "y":200,
+        "dx":0,
+        "dy":0
+    }
+    vaches.append(vache)
+zone_x=0
+zone_y=100
+zone_w=150
+zone_f=200
+
+
+img_maison = pygame.image.load("../pers/maison.png")
+img_maison = pygame.transform.scale(img_maison,(200,200))
+x_maison= 300
+y_maison=150
+
 
 
 while runnin:
@@ -42,59 +62,24 @@ while runnin:
         y_ferm-=1
     if keys[pygame.K_DOWN]:
         y_ferm+=1
+    for vache in vaches:
+        if random.randint(0, 50) == 0:
+            vache["dx"] = random.choice([-1, 0, 1])
+            vache["dy"] = random.choice([-1, 0, 1])
+        vache["x"] += vache["dx"] * 0.2
+        vache["y"] += vache["dy"] * 0.2
+        if vache["x"] < zone_x:
+            vache["x"] = zone_x
+        if vache["x"] > zone_x + zone_w:
+            vache["x"] = zone_x + zone_w
+        if vache["y"] < zone_y:
+            vache["y"] = zone_y
+        if vache["y"] > zone_y + zone_f:
+            vache["y"] = zone_y + zone_f
+
+        fenetre.blit(img_vache,(vache["x"],vache["y"]))
+    fenetre.blit(img_maison,(x_maison,y_maison))
     fenetre.blit(IMG_ferm, (x_ferm,y_ferm))
     pygame.display.update()
 pygame.quit()
-
-#curseur_taille = 20
-
-#curseur_x = LARGEUR // 2
-
-#curseur_y = HAUTEUR // 20
-#vitesse = 5
-
-#clock = pygame.time.Clock()
-
-# Boucle principale
-
-#while True:
-
-    #for event in pygame.event.get():
-
-        #if event.type == pygame.QUIT:
-            #pygame.quit()
-
-            #sys.exit()
-
-    # Récupération des touches pressées
-
-    #touches = pygame.key.get_pressed()
-
-    #if touches[pygame.K_LEFT]:
-        #curseur_x -= vitesse
-
-    #if touches[pygame.K_RIGHT]:
-        #curseur_x += vitesse
-
-    #if touches[pygame.K_UP]:
-        #curseur_y -= vitesse
-
-    #if touches[pygame.K_DOWN]:
-        #curseur_y += vitesse
-
-    # Empêcher le curseur de sortir de l'écran
-
-    #curseur_x = max(0, min(curseur_x, LARGEUR - curseur_taille))
-
-    #curseur_y = max(0, min(curseur_y, HAUTEUR - curseur_taille))
-
-    # Affichage
-
-    #fenetre.blit(background_image, (0, 0))
-
-    #pygame.draw.rect(fenetre, BLANC, (curseur_x, curseur_y, curseur_taille, curseur_taille))
-
-    #pygame.display.flip()
-
-    #clock.tick(60)
 
