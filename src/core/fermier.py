@@ -6,8 +6,8 @@ class Farmer :
         self.y = y
         self.w = w
         self.h = h
-        self.image = image
-        self.vitesse = 1
+        self.image = pygame.transform.scale(image, (self.w, self.h))
+        self.vitesse = 2
 
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.w, self.h)

@@ -1,39 +1,20 @@
 import pygame
-import random
-
-pygame.init()
-
-LARGEUR = 800
-HAUTEUR = 600
-fenetre = pygame.display.set_mode((LARGEUR, HAUTEUR))
-pygame.display.set_caption("Farmstar")
-clock = pygame.time.Clock()
-FPS = 60
-VERT=pygame.Color(153,179,61)
-clock.tick(FPS)
-fenetre.fill((255,255,255))
-pygame.draw.rect(fenetre,VERT,(0,0,800,600))
-pygame.display.update()
-runnin = True
-fenetre.fill(VERT)
 
 
-img_maison = pygame.image.load("../../assets/maison.png")
-img_maison = pygame.transform.scale(img_maison,(200,200))
-x_maison= 300
-y_maison=150
-maison_rect = pygame.Rect(300,150,200,200).inflate(-100,-125)
+class Background:
+    def __init__(self):
+        self.fenetre = pygame.display.set_mode((800, 600))
+        self.VERT = (153, 179, 61)
+        self.field = pygame.image.load("../../assets/field.png")
+        self.field = pygame.transform.scale(self.field, (470, 300))
+        self.field_rect= pygame.Rect(-130,80,470,300).inflate(-275,-125)
+        self.img_maison = pygame.image.load("../../assets/maison.png")
+        self.img_maison = pygame.transform.scale(self.img_maison, (200, 200))
+        self.x_maison = 300
+        self.y_maison = 150
+        self.maison_rect = pygame.Rect(300, 150, 200, 200).inflate(-100, -125)
 
-field = pygame.image.load("../../assets/field.png")
-field = pygame.transform.scale(field,(470,300))
-
-while runnin:
-    fenetre.fill(VERT)
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            runnin=False
-    fenetre.blit(field, (-130, 90))
-    fenetre.blit(img_maison,(x_maison,y_maison))
-    pygame.display.update()
-pygame.quit()
-
+    def afficher(self, fenetre):
+        fenetre.fill(self.VERT)
+        fenetre.blit(self.field, (-130, 90))
+        fenetre.blit(self.img_maison, (self.x_maison, self.y_maison))

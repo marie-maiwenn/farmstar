@@ -1,18 +1,19 @@
 import pygame
 import random
 
-class cow:
+class Cow:
     def __init__(self,x,y,w,h,image,zone):
         self.x=x
         self.y=y
         self.w=w
         self.h=h
-        self.image=image
+        self.image= pygame.transform.scale(image, (60, 60))
         self.dx=0
         self.dy=0
         self.vitesse=0.2
         self.zone=zone
         self.faim=True
+        self.timer_faim = 0
 
     def get_rect(self):
         return pygame.Rect(self.x,self.y,self.w,self.h)
@@ -29,6 +30,11 @@ class cow:
         rect_y = pygame.Rect(self.x, new_y, self.w, self.h)
         if self.zone.contains(rect_y):
             self.y = new_y
+        if not self.faim:
+            self.timer_faim+=1
+            if self.timer_faim >300:
+                self.faim=True
+                self.timer_faim=0
 
     def afficher(self,fenetre):
         fenetre.blit(self.image,(self.x,self.y))
