@@ -8,6 +8,10 @@ class Farmer :
         self.h = h
         self.image = pygame.transform.scale(image, (self.w, self.h))
         self.vitesse = 2
+        self.argent =1000
+        self.inventaire = {"Foin": 0, "Lait":0, "Fromage":0}
+        self.niveau_enclos = 0
+        self.a_fromagerie = False
 
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.w, self.h)

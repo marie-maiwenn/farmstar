@@ -28,14 +28,34 @@ while runnin:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             runnin=False
-    keys=pygame.key.get_pressed()
-    fermier.deplacer(keys,[bg.maison_rect,bg.field_rect, marche.marche_rect])
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                zone_interaction=marche.marche_rect.inflate(100,100)
+                if fermier.get_rect().colliderect(zone_interaction):
+                    marche.popup = not marche.popup
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button==1 and marche.popup:
+                action = marche.gerer_clic(pygame.mouse.get_pos(), fermier)
+                if action== "NOUVELLE_VACHE":
+                    nouvelle_vache = Cow(100,200,60,60, img_vache, zone_vaches)
+                    vaches.append(nouvelle_vache)
+                elif action == "AGRANDIR_ENCLOS":
+                    print("L'enclos s'agrandit !")
+                    bonus_w=25
+                    bonus_h=50
+                    zone_vaches.width+=bonus_w
+                    zone_vaches.height+=bonus_h
+                    bg.agrandir_cahmp(bonus_w,bonus_h)
+                elif action == "CONSTRUIRE_FROMAGERIE":
+                    print("La fromagerie est débloqué !")
+    if not marche.popup:
+        keys=pygame.key.get_pressed()
+        fermier.deplacer(keys,[bg.maison_rect,bg.field_rect, marche.marche_rect])
     for vache in vaches:
         vache.bouger()
     bg.afficher(fenetre)
     marche.afficher(fenetre)
     fermier.afficher(fenetre)
-    #Marche.afficher_popup(marche)/creer une nouvelle fenetre
     for vache in vaches:
         vache.afficher(fenetre)
     for nourriture in nourritures :
@@ -46,5 +66,6 @@ while runnin:
                 nourritures.remove(nourriture)
                 break
         nourriture.afficher(fenetre)
+    marche.afficher_popup(fenetre, fermier)
     pygame.display.update()
 
