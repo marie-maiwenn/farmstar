@@ -12,6 +12,7 @@ class Farmer :
         self.inventaire = {"Foin": 0, "Lait":0, "Fromage":0}
         self.niveau_enclos = 0
         self.a_fromagerie = False
+        self.mode_visee= False
 
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.w, self.h)

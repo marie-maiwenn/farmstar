@@ -17,6 +17,37 @@ class Background:
         self.x_maison = 300
         self.y_maison = 150
         self.maison_rect = pygame.Rect(300, 150, 200, 200).inflate(-100, -125)
+        self.jour = 1
+        self.heures = 6
+        self.minutes = 0
+        self.compteur_temps = 0
+        self.voile_nuit = pygame.Surface((800,600))
+        self.voile_nuit.fill((0,0,40))
+
+    def update_temps(self):
+        self.compteur_temps+=1
+        if self.compteur_temps>=10:
+            self.compteur_temps=0
+            self.minutes+=10
+            if self.minutes>=60:
+                self.minutes = 0
+                self.heures +=1
+
+    def get_opacite_nuit(self):
+        if 6<= self.heures<18:
+            return 0
+        elif 18<= self.heures<20:
+            return 60
+        elif 20<= self.heures<22:
+            return 120
+        else :
+            return 180
+
+    def afficher_nuit(self, fenetre):
+        opacite = self.get_opacite_nuit()
+        if opacite>0:
+            self.voile_nuit.set_alpha(opacite)
+            fenetre.blit(self.voile_nuit,(0,0))
 
     def afficher(self, fenetre):
         fenetre.fill(self.VERT)

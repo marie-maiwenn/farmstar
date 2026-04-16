@@ -16,7 +16,7 @@ class Cow:
         self.timer_faim = 0
 
     def get_rect(self):
-        return pygame.Rect(self.x,self.y,self.w,self.h)
+        return pygame.Rect(self.x+10,self.y+10,self.w-20,self.h-20)
 
     def bouger(self):
         if random.randint(0, 50) == 0:
