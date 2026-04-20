@@ -2,7 +2,7 @@ import pygame
 from src.core.fermier import Farmer
 from src.core.fromage import Fromagerie
 from src.core.vaca import Cow
-from src.core.objets import  Foin
+from src.core.objets import  Foin, Foret
 from src.ui.background import Background
 from src.core.marche import Marche
 from src.ui.morale import BarreMorale
@@ -17,16 +17,33 @@ img_fermier = pygame.image.load("../../assets/fermier.png")
 img_vache = pygame.image.load("../../assets/vache.png")
 img_marche=pygame.image.load("../../assets/shop_sprite.png")
 img_fromagerie= pygame.image.load("../../assets/fromagerie.png")
+img_foret=pygame.image.load("../../assets/foret.png")
 
 fromagerie=Fromagerie(600,420,180,180, img_fromagerie)
 marche = Marche(550,-50,400,200,img_marche)
 fermier = Farmer(375,295,60,60,img_fermier)
+
 zone_vaches= pygame.Rect(0,100,200,250)
 vaches = []
 for i in range(5):
     vaches.append(Cow(100,200,60,60,img_vache,zone_vaches))
 lait_caisse = 0
+
 foin =[]
+
+foret1 = []
+l_bloc = 200
+h_bloc = 200
+y_f=600-h_bloc+30
+espacement = l_bloc-30
+for x in range(-10,800,espacement):
+    nv_bloc = Foret(x,y_f,l_bloc,h_bloc,img_foret)
+    foret1.append(nv_bloc)
+foret2=[]
+for x in range(-10,200,espacement):
+    mini_bloc = Foret(x,y_f-70, l_bloc,90, img_foret)
+    foret2.append(mini_bloc)
+
 caisse_rect = pygame.Rect(220,300,40,40)
 runnin = True
 
@@ -48,7 +65,7 @@ while runnin:
                     fermier.mode_visee = not fermier.mode_visee
                 if fermier.get_rect().colliderect(zone_maison):
                     if bg.heures>=20 or bg.heures<6:
-                        print(f"Zzz... Fin du jour{bg.jour}.")
+                        print(f"Zzz... Fin du jour {bg.jour}.")
                         bg.jour +=1
                         bg.heures = 6
                         bg.minutes = 0
@@ -78,21 +95,42 @@ while runnin:
                         barre.modifier_score(-5)
                     elif action == "AGRANDIR_ENCLOS":
                         print("L'enclos s'agrandit !")
-                        bonus_w=25
-                        bonus_h=50
+                        bonus_w=10
+                        bonus_h=20
                         zone_vaches.width+=bonus_w
                         zone_vaches.height+=bonus_h
-                        bg.agrandir_cahmp(bonus_w,bonus_h)
+                        bg.agrandir_champ(bonus_w,bonus_h)
                         caisse_rect.x = zone_vaches.right + 20
                         caisse_rect.y = zone_vaches.bottom - 50
-                        barre.modifier_score(+10)
+                        barre.modifier_score(+15)
+                        for bloc in foret2[:]:
+                            if bloc.rect.colliderect(zone_vaches):
+                                foret2.remove(bloc)
+                                barre.modifier_score(-10)
                     elif action == "CONSTRUIRE_FROMAGERIE":
                         print("La fromagerie est débloqué !")
-                        fromagerie.ouvert = not fromagerie.ouvert
+                        fromagerie.ouvert = True
+                        for bloc in foret1[:]:
+                            if bloc.rect.colliderect(fromagerie.rect):
+                                foret1.remove(bloc)
+                                barre.modifier_score(-10)
 
-    if not marche.popup:
+    bg.update_temps()
+    if bg.heures>=24:
+        print("Le fermier s'est évanoui de fatigue !")
+        bg.jour+=1
+        bg.heures=6
+        bg.minutes=0
+    if not marche.popup and not fromagerie.interface:
         keys=pygame.key.get_pressed()
-        fermier.deplacer(keys,[bg.maison_rect,bg.field_rect, marche.marche_rect, fromagerie.rect])
+        obstacles=[bg.maison_rect,bg.field_rect, marche.marche_rect]
+        if fromagerie.ouvert :
+            obstacles.append(fromagerie.rect)
+        for bloc in foret1:
+            obstacles.append(bloc.rect)
+        for bloc in foret2:
+            obstacles.append(bloc.rect)
+        fermier.deplacer(keys,obstacles)
 
     for vache in vaches:
         vache.bouger()
@@ -113,7 +151,14 @@ while runnin:
                         foin.remove(fv)
 
     bg.afficher(fenetre)
+
+    for bloc in foret1:
+        bloc.afficher(fenetre)
+    for bloc in foret2:
+        bloc.afficher(fenetre)
+
     marche.afficher(fenetre)
+
     pygame.draw.rect(fenetre, (101, 67, 33), caisse_rect)
     pygame.draw.rect(fenetre, (0, 0, 0), caisse_rect, 2)
 
@@ -145,10 +190,11 @@ while runnin:
         lait_caisse = 0
 
     bg.afficher_nuit(fenetre)
-    ui_rect = pygame.Rect(10,10,300,90)
+
+    ui_rect = pygame.Rect(10,10,240,90)
     pygame.draw.rect(fenetre,(40,40,40,200), ui_rect, border_radius=10)
     pygame.draw.rect(fenetre,(200,180,0), ui_rect,2,border_radius=10)
-    font_ui = pygame.font.SysFont(None,26)
+    font_ui = pygame.font.SysFont(None,22)
     temps_str=f"Jour {bg.jour}   |   {bg.heures:02d}h{bg.minutes:02d}"
     texte_temps = font_ui.render(temps_str,True, (255,255,255))
     fenetre.blit(texte_temps,(20,20))
@@ -157,6 +203,12 @@ while runnin:
     inv = fermier.inventaire
     texte_inv = font_ui.render(f"Foin: {inv['Foin']} | Lait: {inv['Lait']} | Fro: {inv['Fromage']}", True, (200,200,200))
     fenetre.blit(texte_inv, (20,70))
+
     barre.afficher(fenetre)
+
+    if fromagerie.interface:
+        fromagerie.afficher_interface(fenetre, fermier)
+
     marche.afficher_popup(fenetre, fermier)
+
     pygame.display.update()

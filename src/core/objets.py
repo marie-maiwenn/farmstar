@@ -33,3 +33,15 @@ class Foin :
         hauteur = 0 if self.au_sol else 4*self.hauteur_max*self.t*(1-self.t)
         rect_visuel = pygame.Rect(self.x, self.y - hauteur, self.taille, self.taille)
         pygame.draw.rect(fenetre,(200,180,0), rect_visuel)
+
+class Foret :
+    def __init__(self,x,y,w,h,image):
+        self.x=x
+        self.y=y
+        self.w=w
+        self.h=h
+        self.image=pygame.transform.scale(image,(self.w, self.h))
+        self.rect = pygame.Rect(self.x,self.y,self.w, self.h).inflate(-20,-20)
+
+    def afficher(self,fenetre):
+        fenetre.blit(self.image,(self.x,self.y))

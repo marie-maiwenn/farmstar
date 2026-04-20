@@ -9,13 +9,13 @@ class Farmer :
         self.image = pygame.transform.scale(image, (self.w, self.h))
         self.vitesse = 2
         self.argent =1000
-        self.inventaire = {"Foin": 0, "Lait":0, "Fromage":0}
+        self.inventaire = {"Foin": 10, "Lait":0, "Fromage":0}
         self.niveau_enclos = 0
         self.a_fromagerie = False
         self.mode_visee= False
 
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.w, self.h)
+        return pygame.Rect(self.x, self.y, self.w, self.h).inflate(-10,-10)
 
     def deplacer(self, keys, obstacles):
         dx=0
