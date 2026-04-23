@@ -65,7 +65,6 @@ while runnin:
                     fermier.mode_visee = not fermier.mode_visee
                 if fermier.get_rect().colliderect(zone_maison):
                     if bg.heures>=20 or bg.heures<6:
-                        print(f"Zzz... Fin du jour {bg.jour}.")
                         bg.jour +=1
                         bg.heures = 6
                         bg.minutes = 0
@@ -94,7 +93,6 @@ while runnin:
                         vaches.append(nouvelle_vache)
                         barre.modifier_score(-5)
                     elif action == "AGRANDIR_ENCLOS":
-                        print("L'enclos s'agrandit !")
                         bonus_w=10
                         bonus_h=20
                         zone_vaches.width+=bonus_w
@@ -108,7 +106,6 @@ while runnin:
                                 foret2.remove(bloc)
                                 barre.modifier_score(-10)
                     elif action == "CONSTRUIRE_FROMAGERIE":
-                        print("La fromagerie est débloqué !")
                         fromagerie.ouvert = True
                         for bloc in foret1[:]:
                             if bloc.rect.colliderect(fromagerie.rect):
@@ -117,7 +114,6 @@ while runnin:
 
     bg.update_temps()
     if bg.heures>=24:
-        print("Le fermier s'est évanoui de fatigue !")
         bg.jour+=1
         bg.heures=6
         bg.minutes=0
@@ -143,7 +139,6 @@ while runnin:
                         vache.faim = False
                         vache.timer_faim=0
                         lait_caisse+=1
-                        print(f"Lait déposé dans la caisse !🥛 (Total : {lait_caisse})")
                         est_mange = True
                         break
                 if est_mange :
@@ -186,7 +181,6 @@ while runnin:
 
     if fermier.get_rect().colliderect(caisse_rect) and lait_caisse>0:
         fermier.inventaire["Lait"]+=lait_caisse
-        print(f"✅ Récolte terminée ! Tu as ramassé {lait_caisse} bouteilles.")
         lait_caisse = 0
 
     bg.afficher_nuit(fenetre)
